@@ -11,21 +11,21 @@ import canvasapi # used to easily call Canvas API endpoints
 import pandas as pd
 
 # load variables from .env file
-dotenv.load_dotenv()
+dotenv.load_dotenv(dotenv.find_dotenv())
 # Using a command line library like click allows for easily
 # setting up the scripts settings with default values,
 # ways to set values in the command line, and forcing
 # certain inputs like access token to be provided securely
 @click.command()
 
-# Will check `CANVAS_SORT_BY` environment variable for sort order first.
-# If not found, user can input sort_by in the command line via `--sort_by=course_name`
+# Will check `CANVAS_COURSE_STATE` environment variable for course state first.
+# If not found, user can input state in the command line via `--state=available`
 # or they will prompted after running the command
 # restricted to what values are allowed
-@click.option('--sort_by', help='Course a sort order. [course_name, sis_course_id, teacher, account_name]',
-    type=click.Choice(['course_name', 'sis_course_id', 'teacher', 'account_name']),
-    prompt='Select a sort order [course_name, sis_course_id, teacher, account_name]',
-    required=True, envvar='CANVAS_SORT_BY')
+@click.option('--state', help='Course state. [unpublished, available, completed, deleted]',
+    type=click.Choice(['unpublished', 'available', 'completed', 'deleted']),
+    prompt='Select a course state [unpublished, available, completed, deleted]',
+    required=True, envvar='CANVAS_COURSE_STATE')
 
 # Will check `CANVAS_URL` environment variable for Canvas base url first.
 # If not found, user can input url in the command line via `--url=https://example.com`
@@ -38,7 +38,7 @@ dotenv.load_dotenv()
 # default values is `100`
 @click.option('--per_page', help='How many courses to fetch per page. [default: 100]',
     default=100, type=int, envvar='CANVAS_PER_PAGE')
-def view_course_report(url, sort_by, per_page):
+def view_course_report(url, state, per_page):
 
     # ensure access token is available
     TOKEN = os.environ.get('CANVAS_ACCESS_TOKEN')
@@ -56,7 +56,7 @@ def view_course_report(url, sort_by, per_page):
 
     paginated_courses = canvas_api.get_courses(
         per_page=per_page,
-        sort=sort_by,
+        state=[state],
         include=['total_students']
     )
 

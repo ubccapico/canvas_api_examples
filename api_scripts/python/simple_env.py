@@ -9,7 +9,7 @@ import requests
 import pandas as pd
 
 # load variables from .env file
-dotenv.load_dotenv()
+dotenv.load_dotenv(dotenv.find_dotenv())
 
 # Static settings
 # Using a base urls is useful for switching between test and production environments easily
@@ -23,10 +23,10 @@ if TOKEN == None:
     exit()
 auth_header = {'Authorization': 'Bearer ' + TOKEN} # setup the authorization header to be used later
 
-# ensure that SORT_BY is valid
-SORT_BY = os.environ.get('CANVAS_SORT_BY')
-if not SORT_BY in ["course_name", "sis_course_id", "teacher", "account_name"]:
-    print("Invalid sorting. Please set `CANVAS_SORT_BY` to one of [course_name, sis_course_id, teacher, account_name]")
+# ensure that COURSE_STATE is valid
+COURSE_STATE = os.environ.get('CANVAS_COURSE_STATE')
+if not COURSE_STATE in ["unpublished", "available", "completed", "deleted"]:
+    print("Invalid course state. Please set `CANVAS_COURSE_STATE` to one of [unpublished, available, completed, deleted]")
     exit()
 
 print("Finding courses...")
@@ -41,7 +41,7 @@ while True:
     params = {
         "per_page": str(PER_PAGE),
         "page": str(page),
-        "sort": SORT_BY,
+        "state[]": [COURSE_STATE],
         "include[]": ['total_students']
     }
     r = requests.get(request_url, headers=auth_header, params=params)

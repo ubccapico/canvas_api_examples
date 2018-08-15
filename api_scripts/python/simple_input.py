@@ -20,10 +20,10 @@ while not token:
     token = getpass.getpass('Enter your access token:')
 auth_header = {'Authorization': 'Bearer ' + token} # setup the authorization header to be used later
 
-# require that the sort order to be provided
-sort_by = None
-while not sort_by in ["course_name", "sis_course_id", "teacher", "account_name"]:
-    sort_by = input("Select a sort order [course_name, sis_course_id, teacher, account_name]:")
+# require the course state to be provided
+course_state = None
+while not course_state in ['unpublished', 'available', 'completed', 'deleted']:
+    course_state = input("Select a course state [unpublished, available, completed, deleted]:")
 
 
 print("Finding courses...")
@@ -38,7 +38,7 @@ while True:
     params = {
         "per_page": str(PER_PAGE),
         "page": str(page),
-        "sort": sort_by,
+        "state[]": [course_state],
         "include[]": ['total_students']
     }
     r = requests.get(request_url, headers=auth_header, params=params)
