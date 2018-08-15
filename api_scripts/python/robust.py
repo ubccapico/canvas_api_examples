@@ -42,9 +42,8 @@ def view_course_report(url, sort_by, per_page):
 
     # ensure access token is available
     TOKEN = os.environ.get('CANVAS_ACCESS_TOKEN')
-    if TOKEN == None:
-        print("No access token found. Please set `CANVAS_ACCESS_TOKEN`")
-        exit()
+    while not TOKEN:
+        TOKEN = click.prompt("Enter your access token", hide_input=True)
 
     # create a canvas api handler for all requests
     # by using a Canvas API library, we no longer need to
