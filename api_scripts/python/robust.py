@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
+import dotenv
 import json
+
+# os is a simple way to access environment variables
+import os
 
 import click # used for easily collecting user input more robustly
 import requests
 import canvasapi # used to easily call Canvas API endpoints
 import pandas as pd
 
+# load variables from .env file
+dotenv.load_dotenv()
 # Using a command line library like click allows for easily
 # setting up the scripts settings with default values,
 # ways to set values in the command line, and forcing
 # certain inputs like access token to be provided securely
 @click.command()
-
-# token should be input like a password. Will check `CANVAS_ACCESS_TOKEN`
-# environment variable for token. If not found, user can input in the command line
-# via `--token=###` or they will be prompted after running the command
-@click.option('--token', help='Canvas API token.', hide_input=True,
-    prompt='Enter your access token',required=True, envvar='CANVAS_ACCESS_TOKEN')
 
 # Will check `CANVAS_SORT_BY` environment variable for sort order first.
 # If not found, user can input sort_by in the command line via `--sort_by=course_name`
@@ -38,18 +38,26 @@ import pandas as pd
 # default values is `100`
 @click.option('--per_page', help='How many courses to fetch per page. [default: 100]',
     default=100, type=int, envvar='CANVAS_PER_PAGE')
-def view_course_report(url, token, sort_by, per_page):
+def view_course_report(url, sort_by, per_page):
+
+    # ensure access token is available
+    TOKEN = os.environ.get('CANVAS_ACCESS_TOKEN')
+    if TOKEN == None:
+        print("No access token found. Please set `CANVAS_ACCESS_TOKEN`")
+        exit()
+
     # create a canvas api handler for all requests
     # by using a Canvas API library, we no longer need to
     # worry about keeping track of the authorization header
     # or request urls in our code
-    canvas_api = canvasapi.Canvas(url, token)
+    canvas_api = canvasapi.Canvas(url, TOKEN)
 
     click.echo("Finding courses...")
     click.echo("-----------------------------")
 
     paginated_courses = canvas_api.get_courses(
         per_page=per_page,
+        sort=sort_by,
         include=['total_students']
     )
 

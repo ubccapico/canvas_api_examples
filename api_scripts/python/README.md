@@ -6,7 +6,7 @@ The three scripts highlight some basic ways to use the Canvas API.
 
 `simple_input.py` will request the Canvas access token as user input (as a password) along with sort order as an input.
 
-`simple_env.py` will check environment variables for access token, sort order, per page, and the canvas base url. It will quit if not access token if provided or if sort order is not provided or valid (per page and base url will use default values if not found).
+`simple_env.py` will load data from the `.env` file into environment variables for Canvas access token, sort order, per page, and the canvas base url. It will quit if no access token is provided or if sort order is not provided or valid (per page and base url will use default values if not found).
 
 `robust.py` uses the [Click](https://github.com/pallets/click) library to check environment variables and take in user input. It also uses the [canvasapi](https://github.com/ucfopen/canvasapi) library to wrap around the Canvas api. This implementation is a bit more robust in that it uses the power of existing libraries to simplify the code.
 
@@ -39,7 +39,7 @@ python simple_input.py
 
 #### simple_env.py
 
-Setup the environment variables with
+Setup the variables to be loaded as environment variables by creating a file `.env` with these contents
 ```
 export CANVAS_ACCESS_TOKEN=########
 export CANVAS_SORT_BY=course_name
@@ -52,39 +52,24 @@ Run the script with
 python simple_env.py
 ```
 
-Remove the environment variables with
-```
-unset CANVAS_ACCESS_TOKEN
-unset CANVAS_SORT_BY
-unset CANVAS_URL
-unset CANVAS_PER_PAGE
-```
-
 
 
 #### robust.py
+
+Setup the variables to be loaded as environment variables by creating a file `.env` with these contents
+```
+export CANVAS_ACCESS_TOKEN=########
+export CANVAS_SORT_BY=course_name
+export CANVAS_URL=https://canvas.ubc.ca
+export CANVAS_PER_PAGE=40
+```
 
 Run the script with
 ```
 python robust.py
 ```
 
-You can also run with some environment variables:
+You can also pass variables (except for the token) from the command line, instead of storing them in a `.env` file.
 ```
-export CANVAS_ACCESS_TOKEN=########
-export CANVAS_SORT_BY=course_name
-export CANVAS_URL=https://canvas.ubc.ca
-export CANVAS_PER_PAGE=40
-
-python robust.py
-
-unset CANVAS_ACCESS_TOKEN
-unset CANVAS_SORT_BY
-unset CANVAS_URL
-unset CANVAS_PER_PAGE
-```
-
-You can also pass variables from the command line
-```
-python robust.py --url=https://canvas.ubc.ca --per_page=40 --sort_by=course_name --token=########
+python robust.py --url=https://canvas.ubc.ca --per_page=40 --sort_by=course_name
 ```

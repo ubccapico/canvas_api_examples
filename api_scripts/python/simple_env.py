@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import dotenv
 import json
 
 # os is a simple way to access environment variables
@@ -6,6 +7,9 @@ import os
 
 import requests
 import pandas as pd
+
+# load variables from .env file
+dotenv.load_dotenv()
 
 # Static settings
 # Using a base urls is useful for switching between test and production environments easily

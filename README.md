@@ -9,11 +9,11 @@ API Scripts should primarily be used for automating regular tasks, running occas
 The two most import security considerations are to ensure that Canvas access tokens are **secure** and that any data collected by the script is **secure**.
 
 Scripts **MUST** follow these guidelines:
+
 - Access tokens **MUST** never be stored in the scripts or repositories.
 - Access tokens **MUST** never be stored, distributed, or displayed in any way by a script.
 - Access tokens **MUST** be treated as a password when being entered via user input.
-- Access tokens **SHOULD** not be stored in plain text in the file system (it is preferred to use secure secret storage system and/or environment variables)
-- Data collected **MUST** follow UBC's data security guidelines (TODO: add link)
+- Data collected **MUST** follow UBC's data [security guidelines](https://cio.ubc.ca/information-security/policy-and-standards/information-security-policy-standards-and-resources). If in doubt, get in touch with UBC's [LTHub](mailto:lt.hub@ubc.ca) for clarification and help.
 
 
 #### API Example Scripts
